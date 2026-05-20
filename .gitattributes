@@ -1,0 +1,4 @@
+/.gitattributes  export-ignore
+/tests           export-ignore
+/phpunit.xml     export-ignore
+/sandbox-test.php export-ignore
