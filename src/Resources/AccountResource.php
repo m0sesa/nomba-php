@@ -106,5 +106,4 @@ final class AccountResource
 
         return PaginatedResponse::fromArray((array) ($response['data'] ?? []));
     }
-
 }

@@ -9,6 +9,7 @@ use Nomba\Sdk\Exceptions\WebhookException;
 final class PayloadNormalizer
 {
     /**
+     * @param string|array<string, mixed> $payload
      * @return array<string, mixed>
      */
     public function normalize(string|array $payload): array

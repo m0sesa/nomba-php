@@ -35,7 +35,7 @@ final class PsrHttpClientAdapter implements HttpClientInterface
         private readonly ClientInterface         $client,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly StreamFactoryInterface  $streamFactory,
-        /** @var callable(): string|null */
+        /** @var (callable(): (string|null))|null */
         private readonly mixed                   $tokenProvider = null,
         private readonly string                  $baseUri       = '',
         private readonly string                  $accountId     = '',
@@ -59,10 +59,9 @@ final class PsrHttpClientAdapter implements HttpClientInterface
 
             $request = $this->requestFactory->createRequest($method, $fullUri);
 
-            // Inject auth headers when a token provider is configured
             if ($this->tokenProvider !== null) {
                 $token = ($this->tokenProvider)();
-                if (\is_string($token) && $token !== '') {
+                if ($token !== null && $token !== '') {
                     $request = $request->withHeader('Authorization', 'Bearer ' . $token);
                 }
             }
@@ -75,9 +74,9 @@ final class PsrHttpClientAdapter implements HttpClientInterface
                 ->withHeader('Accept', 'application/json')
                 ->withHeader('Content-Type', 'application/json');
 
-            // Caller-provided headers override the defaults above
-            foreach ($options['headers'] ?? [] as $name => $value) {
-                $request = $request->withHeader($name, (string) $value);
+            $headers = \is_array($options['headers'] ?? null) ? $options['headers'] : [];
+            foreach ($headers as $name => $value) {
+                $request = $request->withHeader((string) $name, (string) $value);
             }
 
             $body = $options['json'] ?? $options['payload'] ?? null;

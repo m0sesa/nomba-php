@@ -73,7 +73,7 @@ final class WebhookResourceTest extends TestCase
         self::assertInstanceOf(WebhookEvent::class, $event);
         self::assertSame('req_001', $event->id);
         self::assertSame(WebhookEventType::PaymentSuccess, $event->type);
-        self::assertIsArray($event->payload);
+        self::assertArrayHasKey('merchant', $event->payload);
     }
 
     public function test_parse_accepts_array_payload(): void

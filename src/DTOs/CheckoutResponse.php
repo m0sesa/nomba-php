@@ -18,7 +18,7 @@ final readonly class CheckoutResponse
     {
         return new self(
             orderReference: (string) ($data['orderReference'] ?? ''),
-            checkoutLink:   (string) ($data['checkoutLink'] ?? ''),
+            checkoutLink:   (string) ($data['checkoutLink']   ?? ''),
         );
     }
 }

@@ -27,12 +27,12 @@ final readonly class CheckoutTransactionResponse
     public static function fromArray(array $data): self
     {
         return new self(
-            success:            (bool)  ($data['success'] ?? false),
-            message:            (string) ($data['message'] ?? ''),
-            order:              (array) ($data['order'] ?? []),
+            success:            (bool)  ($data['success']            ?? false),
+            message:            (string) ($data['message']           ?? ''),
+            order:              (array) ($data['order']              ?? []),
             transactionDetails: (array) ($data['transactionDetails'] ?? []),
-            transferDetails:    (array) ($data['transferDetails'] ?? []),
-            cardDetails:        (array) ($data['cardDetails'] ?? []),
+            transferDetails:    (array) ($data['transferDetails']    ?? []),
+            cardDetails:        (array) ($data['cardDetails']        ?? []),
         );
     }
 }

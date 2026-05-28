@@ -9,16 +9,16 @@ use DateTimeImmutable;
 final readonly class VirtualAccountResponse
 {
     public function __construct(
-        public string            $accountRef,
-        public string            $accountHolderId,
-        public string            $accountName,
-        public string            $bankName,
-        public string            $bankAccountNumber,
-        public string            $bankAccountName,
-        public string            $currency,
-        public bool              $expired,
-        public ?string           $bvn,
-        public ?string           $callbackUrl,
+        public string             $accountRef,
+        public string             $accountHolderId,
+        public string             $accountName,
+        public string             $bankName,
+        public string             $bankAccountNumber,
+        public string             $bankAccountName,
+        public string             $currency,
+        public bool               $expired,
+        public ?string            $bvn,
+        public ?string            $callbackUrl,
         public ?DateTimeImmutable $createdAt,
     ) {}
 
@@ -32,15 +32,15 @@ final readonly class VirtualAccountResponse
             : null;
 
         return new self(
-            accountRef:        (string) ($data['accountRef'] ?? ''),
-            accountHolderId:   (string) ($data['accountHolderId'] ?? ''),
-            accountName:       (string) ($data['accountName'] ?? ''),
-            bankName:          (string) ($data['bankName'] ?? ''),
+            accountRef:        (string) ($data['accountRef']        ?? ''),
+            accountHolderId:   (string) ($data['accountHolderId']   ?? ''),
+            accountName:       (string) ($data['accountName']       ?? ''),
+            bankName:          (string) ($data['bankName']          ?? ''),
             bankAccountNumber: (string) ($data['bankAccountNumber'] ?? ''),
-            bankAccountName:   (string) ($data['bankAccountName'] ?? ''),
-            currency:          (string) ($data['currency'] ?? 'NGN'),
-            expired:           (bool)   ($data['expired'] ?? false),
-            bvn:               isset($data['bvn']) ? (string) $data['bvn'] : null,
+            bankAccountName:   (string) ($data['bankAccountName']   ?? ''),
+            currency:          (string) ($data['currency']          ?? 'NGN'),
+            expired:           (bool)   ($data['expired']           ?? false),
+            bvn:               isset($data['bvn'])         ? (string) $data['bvn']         : null,
             callbackUrl:       isset($data['callbackUrl']) ? (string) $data['callbackUrl'] : null,
             createdAt:         $createdAt,
         );

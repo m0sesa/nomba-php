@@ -12,6 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class EventParserTest extends TestCase
 {
+    /**
+     * @param array<string, mixed> $override
+     * @return array<string, mixed>
+     */
     private function payload(array $override = []): array
     {
         return array_merge([
@@ -32,7 +36,7 @@ final class EventParserTest extends TestCase
         self::assertInstanceOf(WebhookEvent::class, $event);
         self::assertSame('req_001', $event->id);
         self::assertSame(WebhookEventType::PaymentSuccess, $event->type);
-        self::assertIsArray($event->payload);
+        self::assertArrayHasKey('merchant', $event->payload);
     }
 
     public function test_parse_maps_unknown_event_type(): void

@@ -12,6 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class TransferResourceTest extends TestCase
 {
+    /**
+     * @param array<string, mixed> $override
+     * @return array<string, mixed>
+     */
     private function data(array $override = []): array
     {
         return [
@@ -29,7 +33,7 @@ final class TransferResourceTest extends TestCase
     public function test_bank_transfer_returns_transfer_response(): void
     {
         $client   = new FakeHttpClient(['data' => $this->data()]);
-        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000]);
+        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000, 'accountNumber' => '0123456789', 'accountName' => 'John Doe', 'bankCode' => '058', 'merchantTxRef' => 'ref_001', 'senderName' => 'Jane']);
 
         self::assertInstanceOf(TransferResponse::class, $response);
         self::assertSame('txn_001', $response->id);
@@ -43,7 +47,7 @@ final class TransferResourceTest extends TestCase
     public function test_bank_transfer_sends_idempotency_key_header(): void
     {
         $client = new FakeHttpClient(['data' => $this->data()]);
-        (new TransferResource($client))->bankTransfer(['amount' => 10000], 'idem-key-001');
+        (new TransferResource($client))->bankTransfer(['amount' => 10000, 'accountNumber' => '0123456789', 'accountName' => 'John Doe', 'bankCode' => '058', 'merchantTxRef' => 'ref_001', 'senderName' => 'Jane'], 'idem-key-001');
 
         self::assertSame('idem-key-001', $client->requests[0]['options']['headers']['X-Idempotent-key']);
     }
@@ -51,7 +55,7 @@ final class TransferResourceTest extends TestCase
     public function test_bank_transfer_omits_idempotency_header_when_null(): void
     {
         $client = new FakeHttpClient(['data' => $this->data()]);
-        (new TransferResource($client))->bankTransfer(['amount' => 10000]);
+        (new TransferResource($client))->bankTransfer(['amount' => 10000, 'accountNumber' => '0123456789', 'accountName' => 'John Doe', 'bankCode' => '058', 'merchantTxRef' => 'ref_001', 'senderName' => 'Jane']);
 
         self::assertArrayNotHasKey('headers', $client->requests[0]['options']);
     }
@@ -59,7 +63,7 @@ final class TransferResourceTest extends TestCase
     public function test_transfer_status_maps_pending_billing(): void
     {
         $client   = new FakeHttpClient(['data' => $this->data(['status' => 'PENDING_BILLING'])]);
-        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000]);
+        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000, 'accountNumber' => '0123456789', 'accountName' => 'John Doe', 'bankCode' => '058', 'merchantTxRef' => 'ref_001', 'senderName' => 'Jane']);
 
         self::assertSame(TransferStatus::PendingBilling, $response->status);
     }
@@ -67,7 +71,7 @@ final class TransferResourceTest extends TestCase
     public function test_transfer_status_maps_refund(): void
     {
         $client   = new FakeHttpClient(['data' => $this->data(['status' => 'REFUND'])]);
-        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000]);
+        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000, 'accountNumber' => '0123456789', 'accountName' => 'John Doe', 'bankCode' => '058', 'merchantTxRef' => 'ref_001', 'senderName' => 'Jane']);
 
         self::assertSame(TransferStatus::Refund, $response->status);
     }
@@ -75,7 +79,7 @@ final class TransferResourceTest extends TestCase
     public function test_transfer_status_falls_back_to_unknown(): void
     {
         $client   = new FakeHttpClient(['data' => $this->data(['status' => 'SOMETHING_NEW'])]);
-        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000]);
+        $response = (new TransferResource($client))->bankTransfer(['amount' => 10000, 'accountNumber' => '0123456789', 'accountName' => 'John Doe', 'bankCode' => '058', 'merchantTxRef' => 'ref_001', 'senderName' => 'Jane']);
 
         self::assertSame(TransferStatus::Unknown, $response->status);
     }
@@ -83,7 +87,7 @@ final class TransferResourceTest extends TestCase
     public function test_wallet_transfer_returns_transfer_response(): void
     {
         $client   = new FakeHttpClient(['data' => $this->data(['type' => 'wallet'])]);
-        $response = (new TransferResource($client))->walletTransfer(['amount' => 5000]);
+        $response = (new TransferResource($client))->walletTransfer(['amount' => 5000, 'receiverAccountId' => 'acct_002', 'merchantTxRef' => 'ref_002']);
 
         self::assertInstanceOf(TransferResponse::class, $response);
         self::assertSame('wallet', $response->type);
@@ -94,7 +98,7 @@ final class TransferResourceTest extends TestCase
     public function test_wallet_transfer_sends_idempotency_key_header(): void
     {
         $client = new FakeHttpClient(['data' => $this->data()]);
-        (new TransferResource($client))->walletTransfer(['amount' => 5000], 'idem-key-002');
+        (new TransferResource($client))->walletTransfer(['amount' => 5000, 'receiverAccountId' => 'acct_002', 'merchantTxRef' => 'ref_002'], 'idem-key-002');
 
         self::assertSame('idem-key-002', $client->requests[0]['options']['headers']['X-Idempotent-key']);
     }

@@ -19,6 +19,7 @@ use Psr\Http\Message\StreamInterface;
 
 final class PsrHttpClientAdapterTest extends TestCase
 {
+    /** @param array<string, mixed> $body */
     private function response(int $status, array $body): ResponseInterface
     {
         $stream = $this->createMock(StreamInterface::class);

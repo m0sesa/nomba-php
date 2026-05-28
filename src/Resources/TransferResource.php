@@ -28,7 +28,7 @@ final class TransferResource
         $options = ['payload' => $payload];
 
         if ($idempotencyKey !== null) {
-            $options['headers']['X-Idempotent-key'] = $idempotencyKey;
+            $options['headers'] = ['X-Idempotent-key' => $idempotencyKey];
         }
 
         $response = $this->httpClient->request('POST', '/v2/transfers/bank', $options);
@@ -50,7 +50,7 @@ final class TransferResource
         $options = ['payload' => $payload];
 
         if ($idempotencyKey !== null) {
-            $options['headers']['X-Idempotent-key'] = $idempotencyKey;
+            $options['headers'] = ['X-Idempotent-key' => $idempotencyKey];
         }
 
         $response = $this->httpClient->request('POST', '/v2/transfers/wallet', $options);
@@ -62,7 +62,7 @@ final class TransferResource
      * Look up an account name before initiating a transfer.
      *
      * @param array{accountNumber: string, bankCode: string} $payload
-     * @return array{accountName: string, accountNumber: string, bankCode: string}
+     * @return array<string, mixed>
      */
     public function lookupBankAccount(array $payload): array
     {
@@ -80,6 +80,6 @@ final class TransferResource
     {
         $response = $this->httpClient->request('GET', '/v1/transfers/banks');
 
-        return (array) ($response['data']['results'] ?? []);
+        return (array) (($response['data'] ?? [])['results'] ?? []);
     }
 }

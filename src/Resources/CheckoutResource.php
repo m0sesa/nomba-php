@@ -48,8 +48,9 @@ final class CheckoutResource
     public function find(string $orderReference): CheckoutResponse
     {
         $response = $this->httpClient->request('GET', "/v1/checkout/order/{$orderReference}");
+        $order    = (array) (($response['data'] ?? [])['order'] ?? []);
 
-        return CheckoutResponse::fromArray((array) ($response['data']['order'] ?? []));
+        return CheckoutResponse::fromArray($order);
     }
 
     /**

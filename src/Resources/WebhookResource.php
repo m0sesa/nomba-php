@@ -28,15 +28,19 @@ final class WebhookResource
     {
         $data = $this->normalizer->normalize($payload);
 
+        $inner       = (array) ($data['data']                  ?? []);
+        $merchant    = (array) ($inner['merchant']             ?? []);
+        $transaction = (array) ($inner['transaction']          ?? []);
+
         $signString = implode(':', [
-            $data['event_type']                              ?? '',
-            $data['requestId']                               ?? '',
-            $data['data']['merchant']['userId']              ?? '',
-            $data['data']['merchant']['walletId']            ?? '',
-            $data['data']['transaction']['transactionId']    ?? '',
-            $data['data']['transaction']['type']             ?? '',
-            $data['data']['transaction']['time']             ?? '',
-            $data['data']['transaction']['responseCode']     ?? '',
+            (string) ($data['event_type']                   ?? ''),
+            (string) ($data['requestId']                    ?? ''),
+            (string) ($merchant['userId']                   ?? ''),
+            (string) ($merchant['walletId']                 ?? ''),
+            (string) ($transaction['transactionId']         ?? ''),
+            (string) ($transaction['type']                  ?? ''),
+            (string) ($transaction['time']                  ?? ''),
+            (string) ($transaction['responseCode']          ?? ''),
             $timestamp,
         ]);
 

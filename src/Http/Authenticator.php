@@ -22,9 +22,9 @@ use Psr\SimpleCache\CacheInterface;
  */
 final class Authenticator
 {
-    private ?string           $accessToken  = null;
-    private ?string           $refreshToken = null;
-    private ?DateTimeImmutable $expiresAt   = null;
+    private ?string            $accessToken  = null;
+    private ?string            $refreshToken = null;
+    private ?DateTimeImmutable $expiresAt    = null;
 
     public function __construct(
         private readonly NombaConfig      $config,
@@ -40,7 +40,7 @@ final class Authenticator
                 return $cached;
             }
         } elseif ($this->isMemoryTokenFresh()) {
-            return $this->accessToken;
+            return $this->accessToken ?? '';
         }
 
         if ($this->refreshToken !== null) {
@@ -72,9 +72,11 @@ final class Authenticator
 
     private function refresh(): string
     {
+        $refreshToken = $this->refreshToken ?? throw new AuthenticationException('No refresh token available.');
+
         return $this->fetchToken('/v1/auth/token/refresh', [
             'grant_type'    => 'refresh_token',
-            'refresh_token' => $this->refreshToken,
+            'refresh_token' => $refreshToken,
         ], $this->accessToken !== null ? ['Authorization' => 'Bearer ' . $this->accessToken] : []);
     }
 
@@ -95,9 +97,9 @@ final class Authenticator
             ]);
 
             $payload = json_decode((string) $response->getBody(), true);
-            $data    = $payload['data'] ?? [];
+            $data    = \is_array($payload) ? (array) ($payload['data'] ?? []) : [];
 
-            $token        = (string) ($data['access_token'] ?? '');
+            $token        = (string) ($data['access_token']  ?? '');
             $refreshToken = isset($data['refresh_token']) ? (string) $data['refresh_token'] : null;
             $expiresAt    = isset($data['expiresAt']) ? new DateTimeImmutable((string) $data['expiresAt']) : null;
 

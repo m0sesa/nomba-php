@@ -12,6 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class CheckoutResourceTest extends TestCase
 {
+    /**
+     * @param array<string, mixed> $override
+     * @return array<string, mixed>
+     */
     private function orderData(array $override = []): array
     {
         return array_merge([

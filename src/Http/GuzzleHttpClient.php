@@ -82,12 +82,13 @@ final class GuzzleHttpClient implements HttpClientInterface
      */
     private function withAuthHeaders(array $options): array
     {
-        $options['headers'] = [
-            ...($options['headers'] ?? []),
+        $existing = \is_array($options['headers'] ?? null) ? $options['headers'] : [];
+
+        $options['headers'] = array_merge($existing, [
             'accountId'    => $this->config->accountId,
             'Accept'       => 'application/json',
             'Content-Type' => 'application/json',
-        ];
+        ]);
 
         if ($this->config->environment !== Environment::Sandbox) {
             $options['headers']['Authorization'] = 'Bearer ' . $this->authenticator->getValidToken();

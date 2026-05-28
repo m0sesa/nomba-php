@@ -24,16 +24,19 @@ final class EventParser
 
         $type = WebhookEventType::fromValue((string) ($payload['event_type'] ?? ''));
 
+        $inner       = (array) ($payload['data']                      ?? []);
+        $transaction = (array) ($inner['transaction']                 ?? []);
+
         $occurredAt = match (true) {
-            $timestamp !== ''                                    => new DateTimeImmutable($timestamp),
-            isset($payload['data']['transaction']['time'])       => new DateTimeImmutable((string) $payload['data']['transaction']['time']),
-            default                                              => new DateTimeImmutable(),
+            $timestamp !== ''             => new DateTimeImmutable($timestamp),
+            isset($transaction['time'])   => new DateTimeImmutable((string) $transaction['time']),
+            default                       => new DateTimeImmutable(),
         };
 
         return new WebhookEvent(
             id:         $id,
             type:       $type,
-            payload:    (array) ($payload['data'] ?? []),
+            payload:    $inner,
             occurredAt: $occurredAt,
         );
     }

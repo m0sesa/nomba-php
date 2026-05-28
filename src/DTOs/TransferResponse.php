@@ -13,13 +13,13 @@ final readonly class TransferResponse
      * @param array<string, mixed> $meta
      */
     public function __construct(
-        public string            $id,
-        public TransferStatus    $status,
-        public string            $type,
-        public float             $amount,
-        public float             $fee,
+        public string             $id,
+        public TransferStatus     $status,
+        public string             $type,
+        public float              $amount,
+        public float              $fee,
         public ?DateTimeImmutable $timeCreated,
-        public array             $meta = [],
+        public array              $meta = [],
     ) {}
 
     /**
@@ -32,13 +32,13 @@ final readonly class TransferResponse
             : null;
 
         return new self(
-            id:          (string) ($data['id'] ?? ''),
+            id:          (string) ($data['id']     ?? ''),
             status:      TransferStatus::fromValue((string) ($data['status'] ?? '')),
-            type:        (string) ($data['type'] ?? ''),
+            type:        (string) ($data['type']   ?? ''),
             amount:      (float)  ($data['amount'] ?? 0.0),
-            fee:         (float)  ($data['fee'] ?? 0.0),
+            fee:         (float)  ($data['fee']    ?? 0.0),
             timeCreated: $timeCreated,
-            meta:        (array)  ($data['meta'] ?? []),
+            meta:        (array)  ($data['meta']   ?? []),
         );
     }
 }

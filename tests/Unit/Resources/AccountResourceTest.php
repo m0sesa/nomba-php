@@ -13,6 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 final class AccountResourceTest extends TestCase
 {
+    /**
+     * @param array<string, mixed> $override
+     * @return array<string, mixed>
+     */
     private function accountData(array $override = []): array
     {
         return array_merge([
@@ -31,6 +35,10 @@ final class AccountResourceTest extends TestCase
         ], $override);
     }
 
+    /**
+     * @param array<string, mixed> $override
+     * @return array<string, mixed>
+     */
     private function balanceData(array $override = []): array
     {
         return array_merge([

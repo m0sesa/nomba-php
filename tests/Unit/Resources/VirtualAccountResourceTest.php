@@ -12,6 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 final class VirtualAccountResourceTest extends TestCase
 {
+    /**
+     * @param array<string, mixed> $override
+     * @return array<string, mixed>
+     */
     private function data(array $override = []): array
     {
         return array_merge([
@@ -45,7 +49,7 @@ final class VirtualAccountResourceTest extends TestCase
     public function test_create_returns_virtual_account_response(): void
     {
         $client   = new FakeHttpClient(['data' => $this->data()]);
-        $response = (new VirtualAccountResource($client))->create(['accountName' => 'John Doe']);
+        $response = (new VirtualAccountResource($client))->create(['accountRef' => 'ref_001', 'accountName' => 'John Doe']);
 
         self::assertInstanceOf(VirtualAccountResponse::class, $response);
         self::assertSame('POST', $client->requests[0]['method']);
